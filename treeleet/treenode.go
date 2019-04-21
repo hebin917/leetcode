@@ -481,17 +481,19 @@ func spiralPrint(root *TreeNode) {
 	}
 }
 
+/*
 func main() {
 	root := InitTreeNode()
 	spiralPrint(&root)
 
 }
+*/
 
 //-------------------------------------------------------------------------------------------------------
 
 /**
 插入一个节点，在为NULL的时候
- */
+*/
 func insert(node *TreeNode, key int) {
 
 }
