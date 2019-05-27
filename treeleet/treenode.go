@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/golang-collections/collections/queue"
 	"github.com/golang-collections/collections/stack"
+	"math"
 )
 
 /*
@@ -58,15 +59,23 @@ func InitTreeNode() (TreeNode) {
 	root.left.left.left = NewNode(8)
 	root.left.left.right = NewNode(9)
 
-	root.left.right.left= NewNode(10)
-	root.left.right.right= NewNode(11)
+	root.left.right.left = NewNode(10)
+	root.left.right.right = NewNode(11)
 
 	root.right.left.left = NewNode(12)
 	root.right.left.right = NewNode(13)
 
-	root.right.right.left= NewNode(14)
-	root.right.right.right= NewNode(15)
+	root.right.right.left = NewNode(14)
+	root.right.right.right = NewNode(15)
 
+	//root := TreeNode{data: 20}
+	//root.left = NewNode(8);
+	//root.left.left = NewNode(4);
+	//root.left.right = NewNode(12);
+	//root.left.right.left = NewNode(10);
+	//root.left.right.right = NewNode(14);
+	//root.right = NewNode(22);
+	//root.right.right = NewNode(25);
 	return root
 }
 
@@ -663,10 +672,10 @@ func printLevelByQueue(root *TreeNode) {
 	for q.Len() > 0 {
 		qnode := q.Dequeue().(*TreeNode)
 		fmt.Printf("%d  ", qnode.data)
-		if qnode.left !=nil {
+		if qnode.left != nil {
 			q.Enqueue(qnode.left)
 		}
-		if qnode.right !=nil {
+		if qnode.right != nil {
 			q.Enqueue(qnode.right)
 		}
 	}
@@ -740,6 +749,7 @@ func printLevelWithoutResc(root *TreeNode) {
 		fmt.Println()
 	}
 }
+
 /*
 func main() {
 	root := InitTreeNode()
@@ -773,22 +783,21 @@ func main() {
 //使用传统方式打印
 func reverseLevelOrder(root *TreeNode) {
 	hgt := height(root)
-	for i:=hgt ;i>0 ;i-- {
-		printGivenLev(root,i,true)
+	for i := hgt; i > 0; i-- {
+		printGivenLev(root, i, true)
 		fmt.Println()
 	}
 }
 
-
 //采用stack方式
 func reverseLevelOrderByStack(root *TreeNode) {
-	q :=queue.New()
-	s :=stack.New()
+	q := queue.New()
+	s := stack.New()
 	if root == nil {
 		return
 	}
-	if root.right ==nil && root.left ==nil {
-		fmt.Printf("%d  ",root.data)
+	if root.right == nil && root.left == nil {
+		fmt.Printf("%d  ", root.data)
 	}
 
 	q.Enqueue(root)
@@ -811,28 +820,27 @@ func reverseLevelOrderByStack(root *TreeNode) {
 	//}
 
 	//通过queue，将所有节点反向压入到stack中，然后取出相关数据即可。
-	for q.Len() >0 {
+	for q.Len() > 0 {
 		qnode := q.Dequeue().(*TreeNode)
 		s.Push(qnode)
-		if qnode.right !=nil{
+		if qnode.right != nil {
 			q.Enqueue(qnode.right)
 		}
-		if qnode.left !=nil {
+		if qnode.left != nil {
 			q.Enqueue(qnode.left)
 		}
 	}
 
-	for s.Len()>0 {
+	for s.Len() > 0 {
 		tmp := s.Pop()
-		if tmp !=nil {
-			qnode:=tmp.(*TreeNode)
-			fmt.Printf("%d   ",qnode.data)
-		}else {
+		if tmp != nil {
+			qnode := tmp.(*TreeNode)
+			fmt.Printf("%d   ", qnode.data)
+		} else {
 			fmt.Println()
 		}
 	}
 }
-
 
 //Perfect Binary Tree Specific Level Order Traversal
 /*
@@ -860,35 +868,224 @@ While 5th level: 16(left), 31(right), 17(left), 30(right), .. are printed.
 
 func printSpecificLevelOrder(root *TreeNode) {
 	q := queue.New()
-	if root ==nil {
+	if root == nil {
 		return
 	}
-	fmt.Printf("%d  ",root.data)
-	if root.left !=nil  {
-		fmt.Printf("%d   %d   ",root.left.data,root.right.data)
+	fmt.Printf("%d  ", root.data)
+	if root.left != nil {
+		fmt.Printf("%d   %d   ", root.left.data, root.right.data)
 	}
 
 	q.Enqueue(root.left)
 	q.Enqueue(root.right)
-	left :=true
-	for q.Len() >0 {
+	left := true
+	for q.Len() > 0 {
 		qnode1 := q.Dequeue().(*TreeNode)
 		qnode2 := q.Dequeue().(*TreeNode)
 
-		fmt.Printf("%d	%d	%d	%d	",qnode1.left.data,qnode2.right.data,qnode1.right.data,qnode2.left.data)
-		if qnode1.left.left!=nil {
+		fmt.Printf("%d	%d	%d	%d	", qnode1.left.data, qnode2.right.data, qnode1.right.data, qnode2.left.data)
+		if qnode1.left.left != nil {
 			q.Enqueue(qnode1.left)
 			q.Enqueue(qnode2.right)
 			q.Enqueue(qnode1.right)
 			q.Enqueue(qnode2.left)
-			left=!left
+			left = !left
 		}
 	}
 }
+
+/*
+求tree的密度： 密度=size/height
+ */
+func heightAndSize(root *TreeNode) {
+	q := queue.New()
+	q.Enqueue(root)
+	size := 0
+	level := 0
+	for q.Len() > 0 {
+		qNum := q.Len()
+		for i := 0; i < qNum; i++ {
+			qnode := q.Dequeue().(*TreeNode)
+			fmt.Printf("%d  ", qnode.data)
+			size ++
+			if qnode.left != nil {
+				q.Enqueue(qnode.left)
+			}
+			if qnode.right != nil {
+				q.Enqueue(qnode.right)
+			}
+		}
+		fmt.Println()
+		level++
+	}
+	fmt.Printf("size: %d ,   level:  %d,  密度： %f\n", size, level, math.Ceil(float64(size)/float64(level)))
+}
+
+//递归解法
+func heightAndSizeRescUtil(root *TreeNode, size *int) int {
+	if root == nil {
+		return 0
+	}
+	llen := heightAndSizeRescUtil(root.left, size)
+	rlen := heightAndSizeRescUtil(root.right, size)
+	*size ++
+	if llen > rlen {
+		return llen + 1
+	}
+	return rlen + 1
+}
+
+func heightAndSizeResc(root *TreeNode) {
+	var res *int
+	var a int = 0
+	res = &a
+	height := heightAndSizeRescUtil(root, res)
+	fmt.Println(math.Ceil(float64(*res) / float64(height)))
+}
+
+/*
+LeetCode-53：Maximum Subarray (和最大的连续子数组)
+ */
+func maxSubAry(nums []int) int {
+	futSum, endSum := nums[0], nums[0]
+	for i := 1; i < len(nums); i++ {
+		endSum = max(endSum+nums[i], nums[i])
+		futSum = max(futSum, endSum)
+	}
+	return futSum
+}
+
+func max(n1, n2 int) int {
+	if n1 > n2 {
+		return n1
+	}
+	return n2
+}
+
+/*
+二叉树的边界遍历
+Boundary Traversal of binary tree
+1. 从上向下打印左子树
+2. 打印叶子节点
+3. 从下往上打印右子树
+边界节点为： root.left !=nil时，root=root.left;否则为root=root.right
+ */
+func printBoundaryLeft(root *TreeNode) {
+	if root != nil {
+		if root.left != nil {
+			fmt.Printf("%d  ", root.data)
+			printBoundaryLeft(root.left)
+		} else if root.right != nil {
+			fmt.Printf("%d  ", root.data)
+			printBoundaryLeft(root.right);
+		}
+	}
+}
+
+func printBoundaryRight(root *TreeNode) {
+	if root != nil {
+		if root.right != nil {
+			printBoundaryRight(root.right)
+			fmt.Printf("%d  ", root.data)
+		} else if root.left != nil {
+			printBoundaryRight(root.left)
+			fmt.Printf("%d  ", root.data)
+		}
+	}
+}
+
+func printBoundaryLeaves(node *TreeNode) {
+	if node != nil {
+		printBoundaryLeaves(node.left)
+		if node.left == nil && node.right == nil {
+			fmt.Printf("%d  ", node.data)
+		}
+		printBoundaryLeaves(node.right)
+	}
+
+}
+
+func printBoundary(root *TreeNode) {
+	if root != nil {
+		fmt.Printf("%d  ", root.data)
+		printBoundaryLeft(root.left)
+		printBoundaryLeaves(root.left)
+		printBoundaryLeaves(root.right)
+		printBoundaryRight(root.right)
+	}
+}
+
+/*
+从preorder的数组计算出depth
+Calculate depth of a full Binary tree from Preorder
+Given preorder of a binary tree, calculate its depth(or height) [starting from depth 0]. The preorder is given as a string with two possible characters.
+
+‘l’ denotes the leaf
+‘n’ denotes internal node
+The given tree can be seen as a full binary tree where every node has 0 or two children. The two children of a node can ‘n’ or ‘l’ or mix of both.
+ */
+func finddepth(root []rune) {
+	var a int = 0
+	var idx *int
+	idx = &a
+	n := len(root)
+	fmt.Println(findDepthUtil(root, n, idx))
+}
+func findDepthUtil(root []rune, n int, idx *int) int {
+	if root[*idx] == 'l' || *idx >= n {
+		return 0
+	}
+	*idx ++
+	llen := findDepthUtil(root, n, idx)
+	*idx ++
+	rllen := findDepthUtil(root, n, idx)
+	if llen > rllen {
+		return llen + 1
+	}
+	return rllen + 1
+}
+
+
+
+/*
+Modify a binary tree to get preorder traversal using right pointers only
+Given a binary tree. Modify it in such a way that after modification you can have a preorder traversal of it using only the right pointers. During modification, you can use right as well as left pointers.
+
+Examples:
+
+Input :    10
+          /   \
+        8      2
+      /  \
+    3     5
+Output :    10
+              \
+               8
+                \
+                 3
+                  \
+                   5
+                    \
+                     2
+Explanation : The preorder traversal
+of given binary tree is 10 8 3 5 2.
+ */
+
 
 func main() {
 	root := InitTreeNode()
 	//reverseLevelOrder(&root)
 	//reverseLevelOrderByStack(&root)
-	printSpecificLevelOrder(&root)
+	//printSpecificLevelOrder(&root)
+	//fmt.Println()
+	//heightAndSize(&root)
+	//heightAndSizeResc(&root)
+	//
+	//nums := []int{-1, 1, 2, -1, 1, 3, -1, 3}
+	//fmt.Println(maxSubAry(nums))
+	printBoundary(&root)
+	fmt.Println()
+	var runes []rune = []rune{'n', 'l', 'n', 'n', 'l', 'l', 'l'}
+	finddepth(runes)
+
 }
