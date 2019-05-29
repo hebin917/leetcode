@@ -1,17 +1,11 @@
-package linkedlist
+package main
 
 import (
 	"sync"
 )
 
-func main() {
 
-}
 
-type Node struct {
-	data interface{}
-	next *Node
-}
 
 type LinkedList struct {
 	head *Node
