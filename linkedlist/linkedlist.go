@@ -1,18 +1,15 @@
 package main
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0c45af13a3faf8c1619b6c89841f6eeca52d7fe
 
 import (
 	"sync"
 )
 
-func main() {
 
-}
 
-type Node struct {
-	data interface{}
-	next *Node
-}
 
 type LinkedList struct {
 	head *Node

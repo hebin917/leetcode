@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/golang-collections/collections/stack"
 	"fmt"
+	"github.com/golang-collections/collections/stack"
 )
 
 func main() {
@@ -24,7 +24,12 @@ func main() {
 	//fmt.Println("PostOrder iter: ")
 	//IterPostorderWithTwoStack(&root)
 	IterPostorderWithOneStack(&root)
+	fmt.Println("PostOrder iter: ")
+	IterPostorderWithTwoStack(&root)
+	heightAndSize(&root)
 }
+
+
 
 /*
 使用stack来操作
@@ -131,3 +136,8 @@ func IterPostorderWithTwoStack(root *TreeNode) {
 	}
 
 }
+
+/*
+Diagonal Traversal of Binary Tree:  二叉树的对角遍历
+
+ */
