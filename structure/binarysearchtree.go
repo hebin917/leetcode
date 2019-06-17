@@ -1,4 +1,5 @@
-package structure
+package main
+
 
 import (
 	"sync"

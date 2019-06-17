@@ -46,27 +46,27 @@ func InitTreeNode() (TreeNode) {
 	4       5       6        7
 8
 	 */
-	root := TreeNode{data: 1}
-	root.left = NewNode(2)
-	root.right = NewNode(3)
-
-	root.left.left = NewNode(4)
-	root.left.right = NewNode(5)
-
-	root.right.left = NewNode(6)
-	root.right.right = NewNode(7)
-
-	root.left.left.left = NewNode(8)
-	root.left.left.right = NewNode(9)
-
-	root.left.right.left = NewNode(10)
-	root.left.right.right = NewNode(11)
-
-	root.right.left.left = NewNode(12)
-	root.right.left.right = NewNode(13)
-
-	root.right.right.left = NewNode(14)
-	root.right.right.right = NewNode(15)
+	//root := TreeNode{data: 1}
+	//root.left = NewNode(2)
+	//root.right = NewNode(3)
+	//
+	//root.left.left = NewNode(4)
+	//root.left.right = NewNode(5)
+	//
+	//root.right.left = NewNode(6)
+	//root.right.right = NewNode(7)
+	//
+	//root.left.left.left = NewNode(8)
+	//root.left.left.right = NewNode(9)
+	//
+	//root.left.right.left = NewNode(10)
+	//root.left.right.right = NewNode(11)
+	//
+	//root.right.left.left = NewNode(12)
+	//root.right.left.right = NewNode(13)
+	//
+	//root.right.right.left = NewNode(14)
+	//root.right.right.right = NewNode(15)
 
 	//root := TreeNode{data: 20}
 	//root.left = NewNode(8);
@@ -76,6 +76,20 @@ func InitTreeNode() (TreeNode) {
 	//root.left.right.right = NewNode(14);
 	//root.right = NewNode(22);
 	//root.right.right = NewNode(25);
+
+	root := TreeNode{data: 8}
+	root.left = NewNode(3)
+	root.right = NewNode(10)
+	root.left.left = NewNode(1)
+
+	root.right.left = NewNode(6)
+	root.right.right = NewNode(14)
+
+	root.right.left.left = NewNode(4)
+	root.right.left.right = NewNode(7)
+
+	root.right.right.left = NewNode(13)
+
 	return root
 }
 
@@ -1045,8 +1059,6 @@ func findDepthUtil(root []rune, n int, idx *int) int {
 	return rllen + 1
 }
 
-
-
 /*
 Modify a binary tree to get preorder traversal using right pointers only
 Given a binary tree. Modify it in such a way that after modification you can have a preorder traversal of it using only the right pointers. During modification, you can use right as well as left pointers.
@@ -1071,9 +1083,326 @@ Explanation : The preorder traversal
 of given binary tree is 10 8 3 5 2.
  */
 
+/*
+Check for Children Sum Property in a Binary Tree
+Given a binary tree, write a function that returns true if the tree satisfies below property.
+For every node, data value must be equal to sum of data values in left and right children. Consider data value as 0 for NULL children. Below tree is an example
+ */
+
+func isSumProp(root *TreeNode) bool {
+	q := queue.New()
+	var left, right int
+	q.Enqueue(root)
+	for q.Len() > 0 {
+		node := q.Dequeue().(*TreeNode)
+		if node.left == nil {
+			left = 0
+		} else {
+			left = node.left.data
+			q.Enqueue(node.left)
+		}
+		if node.right == nil {
+			right = 0
+		} else {
+			right = node.right.data
+			q.Enqueue(node.right)
+		}
+		if node.left == nil && node.right == nil {
+			continue
+		} else {
+			if node.data != (left + right) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+/*
+写一个function，用于判断是否是sumtree，sumtree:node = left node + right node
+Write a function that returns true if the given Binary Tree is SumTree else false. A SumTree is a Binary Tree where the value of a node is equal to sum of the nodes present in its left subtree and right subtree. An empty tree is SumTree and sum of an empty tree can be considered as 0. A leaf node is also considered as SumTree.
+
+Following is an example of SumTree.
+
+          26
+        /   \
+      10     3
+    /    \     \
+  4      6      3
+
+时间复杂度为： O(n2)
+ */
+func isSumTress(root *TreeNode) bool {
+
+	if root == nil || root.left == nil && root.right == nil {
+		return true
+	}
+
+	lsum := sum(root.left)
+	rsum := sum(root.right)
+
+	if (root.data == lsum+rsum) && isSumTress(root.left) && isSumTress(root.right) {
+		return true
+	}
+	return false
+}
+
+func sum(node *TreeNode) int {
+	if node == nil {
+		return 0
+	}
+	return sum(node.left) + sum(node.right) + node.data
+}
+
+//方法二
+/*
+Method 2 ( Tricky )
+The Method 1 uses sum() to get the sum of nodes in left and right subtrees. The method 2 uses following rules to get the sum directly.
+1) If the node is a leaf node then sum of subtree rooted with this node is equal to value of this node.
+如果是叶子节点： 叶子节点的和=node.data
+2) If the node is not a leaf node then sum of subtree rooted with this node is twice the value of this node (Assuming that the tree rooted with this node is SumTree).
+如果是非叶子节点: 节点的和 *2 =root.data
+
+时间复杂度为O(n)
+ */
+func isSumTree(root *TreeNode) bool {
+	if root == nil || root.left == nil && root.right == nil {
+		return true
+	}
+	var lsum, rsum int
+	for isSumTree(root.left) && isSumTree(root.right) {
+		if root.left == nil {
+			return true
+		} else if root.left.left == nil && root.left.right == nil { //叶子节点
+			lsum = root.left.data
+		} else {
+			lsum = 2 * root.left.data
+		}
+
+		if root.right == nil {
+			return true
+		} else if root.right.right == nil && root.right.left == nil {
+			rsum = root.right.data
+		} else {
+			rsum = 2 * root.right.data
+		}
+		return root.data == lsum+rsum
+	}
+	return false
+}
+
+/*
+三个数中有一个是负数的时候就需要小心：需要比对三个最大数和前俩个最小数*最大数的大小。
+ */
+func maxSum(arr []int, n int) int {
+	if len(arr) < n {
+		return 0
+	}
+	sum := 1
+	j := 0
+	for j < n {
+		max := arr[0]
+		i := 0
+		for ; i < len(arr); i++ {
+			if arr[i] > max {
+				max = arr[i]
+			}
+		}
+		//fmt.Println("i: ",i)
+		if i == len(arr) {
+			arr = arr[0 : i-1]
+		} else {
+			arr = append(arr[0:i-2], arr[i-1:len(arr)-1]...)
+		}
+		sum *= max
+		j++
+	}
+	return sum
+}
+
+/*
+把二叉树按照对角线打印
+d： 代表坡度
+使用map来保存每个坡度对应的值
+
+需要按照preorder来打印，先打印root
+ */
+func diagonalPrintUtil(root *TreeNode, d int, m map[int][]int) {
+	if root == nil {
+		return
+	}
+	tmp := append(m[d], root.data)
+	m[d] = tmp
+	diagonalPrintUtil(root.left, d+1, m)
+	diagonalPrintUtil(root.right, d, m)
+}
+
+func diagonalPrint(root *TreeNode) {
+	m := make(map[int][]int)
+	diagonalPrintUtil(root, 0, m)
+
+}
+
+// 迭代实现：
+/*
+使用preorder：
+1.打印root和right节点
+2. 压入left节点
+3.如果right节点未nil的话，继续弹出节点，判断是否为空，为空则换行打印，标志位一个对角线结束，然后继续压入nil
+ */
+func diagonalPrintWithoutResc(root *TreeNode) {
+	q := queue.New()
+	if root == nil {
+		return
+	}
+	q.Enqueue(root)
+	q.Enqueue(nil)
+
+	for q.Len() > 0 {
+		p := q.Dequeue()
+		var tmp *TreeNode
+		if p != nil {
+			tmp = p.(*TreeNode)
+		} else {
+			tmp = nil
+		}
+		if tmp == nil {
+			if q.Len() == 0 {
+				return
+			}
+			fmt.Println()
+			q.Enqueue(nil)
+		} else {
+			for tmp != nil {
+				fmt.Printf("%d ", tmp.data)
+				if tmp.left != nil {
+					q.Enqueue(tmp.left)
+				}
+				tmp = tmp.right
+			}
+		}
+	}
+
+}
+
+
+
+
+/*
+
+94. 二叉树的中序遍历
+给定一个二叉树，返回它的中序 遍历。
+
+
+ */
+func inorderTraversal(root *TreeNode) []int {
+	ret := []int{}
+	helper(root, &ret)
+	return ret
+}
+
+func helper(root *TreeNode, ret *[]int) {
+	if root == nil {
+		return
+	}
+	helper(root.left, ret)
+	*ret = append(*ret, root.data)
+	helper(root.right, ret)
+}
+
+
+/*
+96. 不同的二叉搜索树
+给定一个整数 n，求以 1 ... n 为节点组成的二叉搜索树有多少种？
+
+示例:
+
+输入: 3
+输出: 5
+解释:
+给定 n = 3, 一共有 5 种不同结构的二叉搜索树:
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/unique-binary-search-trees
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ */
+
+func numTrees(n int) int {
+	//dp[i]=dp[j]+dp[j-1]
+	dp := make([]int,n+1)
+	dp[0]=1
+	dp[1]=1
+
+	for i:=2;i<n+1;i++ {
+		for j:=1;j<i+1;j++ {
+			dp[i]+=dp[j-1] * dp[i-j]
+		}
+	}
+	return dp[n]
+}
+
+/*
+95. 不同的二叉搜索树 II
+给定一个整数 n，生成所有由 1 ... n 为节点所组成的二叉搜索树。
+
+示例:
+
+输入: 3
+输出:
+[
+  [1,null,3,2],
+  [3,2,null,1],
+  [3,1,null,null,2],
+  [2,1,3],
+  [1,null,2,null,3]
+]
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/unique-binary-search-trees-ii
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ */
+//func generateTrees(n int) []*TreeNode {
+//
+//	return genTree(1,n)
+//}
+//
+//func genTree(start int,end int) []*TreeNode {
+//	ret := []*TreeNode{}
+//	if start > end {
+//		return ret
+//	}
+//	if start == end {
+//		node=&TreeNode{Val:start}
+//		ret=append(ret,node)
+//		return node
+//	}
+//	var lnode ,rnode *TreeNode
+//	for i:=start;i<=end;i++ {
+//		lnode = genTree(i-1,end)
+//		rnode=genTree(i+1,end)
+//		for _,ln := range lnode{
+//			for _,rn :=range rnode {
+//				root := &TreeNode{Val:i}
+//				root.left=ln
+//				root.right =rn
+//				ret =append(root)
+//			}
+//		}
+//	}
+//}
+
 
 func main() {
-	root := InitTreeNode()
+
+	//root := InitTreeNode()
+	//fmt.Println(inorderTraversal(&root))
+	fmt.Println(numTrees(3))
 	//reverseLevelOrder(&root)
 	//reverseLevelOrderByStack(&root)
 	//printSpecificLevelOrder(&root)
@@ -1083,9 +1412,16 @@ func main() {
 	//
 	//nums := []int{-1, 1, 2, -1, 1, 3, -1, 3}
 	//fmt.Println(maxSubAry(nums))
-	printBoundary(&root)
-	fmt.Println()
-	var runes []rune = []rune{'n', 'l', 'n', 'n', 'l', 'l', 'l'}
-	finddepth(runes)
+	//printBoundary(&root)
+	//fmt.Println()
+	//var runes []rune = []rune{'n', 'l', 'n', 'n', 'l', 'l', 'l'}
+	//finddepth(runes)
 
+	//fmt.Println(isSumProp(&root))
+	//fmt.Println(isSumTree(&root))
+	//
+	//arr := []int{-6, -5, -1, -2, -3, -4, 5, 6}
+	//fmt.Println(maxSum(arr, 3))
+
+	//diagonalPrintWithoutResc(&root)
 }

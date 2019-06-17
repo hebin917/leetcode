@@ -7,22 +7,23 @@ import (
 
 func main() {
 	root := InitTreeNode()
-	inorder(&root)
-	fmt.Println()
-	IterInorder(&root)
-
-
-	fmt.Println("PreOder:  ")
-	preOrder(&root)
-	fmt.Println("")
-	IterPreorder(&root)
+	//inorder(&root)
+	//fmt.Println()
+	//IterInorder(&root)
+	//
+	//
+	//fmt.Println("PreOder:  ")
+	//preOrder(&root)
+	//fmt.Println("")
+	//IterPreorder(&root)
 
 	fmt.Println()
 	fmt.Println("PostOder:  ")
 	postOrder(&root)
 
-	fmt.Println("PostOrder iter: ")
-	IterPostorderWithTwoStack(&root)
+	//fmt.Println("PostOrder iter: ")
+	//IterPostorderWithTwoStack(&root)
+	IterPostorderWithOneStack(&root)
 }
 
 /*

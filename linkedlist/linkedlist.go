@@ -1,4 +1,5 @@
-package linkedlist
+package main
+
 
 import (
 	"sync"

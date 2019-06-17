@@ -9,7 +9,6 @@ func main() {
 	fmt.Println(judgeCircle("UDLRL"))
 	fmt.Println(judgeCircle("LR"))
 	fmt.Println(judgeCircle("DL"))
-
 }
 
 func judgeCircle0(moves string) bool {

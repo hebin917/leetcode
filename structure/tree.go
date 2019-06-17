@@ -1,4 +1,5 @@
-package structure
+package main
+
 
 import (
 	"fmt"
@@ -20,7 +21,7 @@ type Node struct {
 
 func (n *Node) Print() {
 	if n != nil {
-		fmt.Printf("%v\n", n.Value)
+		fmt.Printf("%v", n.Value)
 	}
 }
 
@@ -184,7 +185,6 @@ func (n *Node) GetNodeNumKLevel(k int) int {
 	return n.lNode.GetNodeNumKLevel(k-1) + n.rNode.GetNodeNumKLevel(k-1)
 }
 
-/*
 func main() {
 	root := Node{Value: 3}
 	root.lNode = &Node{}
@@ -209,7 +209,6 @@ func main() {
 	fmt.Printf("二叉树深度:  %d\n",root.GetDepth())
 	fmt.Printf("二叉树第K层节点个数：  %d", root.GetNodeNumKLevel(3))
 }
-*/
 
 /*
 5. 判断两棵二叉树是否结构相同
@@ -332,33 +331,35 @@ func (n *Node) GetMaxDistance(maxleft int, maxright int) int {
 }
 
 
-func main() {
-	root := Node{Value: 3}
-	root.lNode = &Node{}
-	root.rNode = &Node{5, nil, nil}
-	root.rNode.lNode = new(Node)
-	root.rNode.lNode.SetValue(4)
-	root.lNode.rNode = CreateNode(2)
-	root.lNode.lNode = CreateNode(6)
-
-	right := &Node{Value: 3}
-	right.lNode = &Node{}
-	right.rNode = &Node{5, nil, nil}
-	right.rNode.lNode = new(Node)
-	right.rNode.lNode.SetValue(4)
-	right.lNode.rNode = CreateNode(2)
-	right.lNode.lNode = CreateNode(6)
-
-	fmt.Println("俩个树结构是否相同：   %v", root.StructureCmp(right))
-
-	fmt.Println("镜像前======")
-	root.LevelOrder()
-	fmt.Println("镜像后=====")
-	root.Mirror()
-	root.LevelOrder()
-	fmt.Println("=========")
-	fmt.Printf("节点之间的最大距离：     %d\n",right.GetMaxDistance(0,3))
-}
+//func main() {
+//	root := Node{Value: 3}
+//	root.lNode = &Node{}
+//	root.rNode = &Node{5, nil, nil}
+//	root.rNode.lNode = new(Node)
+//	root.rNode.lNode.SetValue(4)
+//	root.lNode.rNode = CreateNode(2)
+//	root.lNode.lNode = CreateNode(6)
+//	fmt.Println("前序遍历：  ")
+//	root.PreOrder()
+//
+//	//right := &Node{Value: 3}
+//	//right.lNode = &Node{}
+//	//right.rNode = &Node{5, nil, nil}
+//	//right.rNode.lNode = new(Node)
+//	//right.rNode.lNode.SetValue(4)
+//	//right.lNode.rNode = CreateNode(2)
+//	//right.lNode.lNode = CreateNode(6)
+//	//
+//	//fmt.Println("俩个树结构是否相同：   %v", root.StructureCmp(right))
+//	//
+//	//fmt.Println("镜像前======")
+//	//root.LevelOrder()
+//	//fmt.Println("镜像后=====")
+//	//root.Mirror()
+//	//root.LevelOrder()
+//	//fmt.Println("=========")
+//	//fmt.Printf("节点之间的最大距离：     %d\n",right.GetMaxDistance(0,3))
+//}
 /*
 10. 由前序遍历序列和中序遍历序列重建二叉树
 二叉树前序遍历序列中，第一个元素总是树的根节点的值。中序遍历序列中，左子树的节点的值位于根节点的值的左边，右子树的节点的值位
